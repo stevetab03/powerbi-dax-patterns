@@ -175,8 +175,6 @@ demo/
 | [EIA API v2](https://www.eia.gov/opendata/) | WTI spot price, daily | US Government open data — no restrictions |
 | [Yahoo Finance](https://finance.yahoo.com) via yfinance | WTI futures (3 tenors), daily | Public market data |
 
-No proprietary data. No paid API. Fully reproducible from public sources.
-
 ---
 
 ## Connection to ORBIT
