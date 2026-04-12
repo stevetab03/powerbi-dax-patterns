@@ -1,0 +1,409 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
+  "name": "21c48417615e08dbed23",
+  "position": {
+    "x": 0,
+    "y": 0,
+    "z": 0,
+    "height": 719.70260223048331,
+    "width": 1002.825278810409,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim_Date"
+                    }
+                  },
+                  "Property": "Date"
+                }
+              },
+              "queryRef": "Dim_Date.Date",
+              "nativeQueryRef": "Date"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact_BasisPanel"
+                    }
+                  },
+                  "Property": "SpotPrice"
+                }
+              },
+              "queryRef": "Fact_BasisPanel.SpotPrice",
+              "nativeQueryRef": "Spot Price",
+              "displayName": "Spot Price"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact_BasisPanel"
+                    }
+                  },
+                  "Property": "FrontPrice"
+                }
+              },
+              "queryRef": "Fact_BasisPanel.FrontPrice",
+              "nativeQueryRef": "Front Price",
+              "displayName": "Front Price"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact_BasisPanel"
+                    }
+                  },
+                  "Property": "BasisPrice"
+                }
+              },
+              "queryRef": "Fact_BasisPanel.BasisPrice",
+              "nativeQueryRef": "Basis Price",
+              "displayName": "Basis Price"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact_BasisPanel"
+                    }
+                  },
+                  "Property": "BasisVol21d"
+                }
+              },
+              "queryRef": "Fact_BasisPanel.BasisVol21d",
+              "nativeQueryRef": "Basis Volatility",
+              "displayName": "Basis Volatility"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Dim_DisruptionEvents"
+                    }
+                  },
+                  "Property": "My Remark"
+                }
+              },
+              "queryRef": "Dim_DisruptionEvents.My Remark",
+              "nativeQueryRef": "My Remark"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Dim_Date"
+                  }
+                },
+                "Property": "Date"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ]
+      }
+    },
+    "objects": {
+      "values": [
+        {
+          "properties": {
+            "wordWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {
+            "alignment": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Right'"
+                }
+              }
+            },
+            "autoSizeColumnWidth": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "wordWrap": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnFormatting": [
+        {
+          "properties": {
+            "styleTotal": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Fact_BasisPanel.SpotPrice"
+          }
+        }
+      ],
+      "total": [
+        {
+          "properties": {
+            "totals": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "602.6321391843621D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Dim_DisruptionEvents.My Remark"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "79D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Dim_Date.Date"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "70D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Fact_BasisPanel.SpotPrice"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "74D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Fact_BasisPanel.FrontPrice"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "72D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Fact_BasisPanel.BasisPrice"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "94D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Fact_BasisPanel.BasisVol21d"
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Monthly Summary'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "stylePreset": [
+        {
+          "properties": {
+            "name": {
+              "expr": {
+                "Literal": {
+                  "Value": "'AlternatingRowsNew'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "b485e01a02b7358c06ac",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Dim_Date"
+              }
+            },
+            "Property": "Date"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "1e89f6d14c0d5ad9b08d",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Fact_BasisPanel"
+              }
+            },
+            "Property": "SpotPrice"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "35daec390908e7eebe8b",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Fact_BasisPanel"
+              }
+            },
+            "Property": "FrontPrice"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "fffe864abaed93890a3d",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Fact_BasisPanel"
+              }
+            },
+            "Property": "BasisPrice"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "8fd9078fa57504570582",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Fact_BasisPanel"
+              }
+            },
+            "Property": "BasisVol21d"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "627f8d65eb9575654b5a",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Dim_DisruptionEvents"
+              }
+            },
+            "Property": "My Remark"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
+  }
+}

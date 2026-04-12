@@ -1,0 +1,57 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
+  "name": "5528435a1858829297bd",
+  "position": {
+    "x": 958.81040892193312,
+    "y": 149.88847583643124,
+    "z": 1000,
+    "height": 279.5539033457249,
+    "width": 280.74349442379184,
+    "tabOrder": 1000
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Fact_BasisPanel"
+                    }
+                  },
+                  "Property": "VarianceCollapseRatio"
+                }
+              },
+              "queryRef": "Fact_BasisPanel.VarianceCollapseRatio",
+              "nativeQueryRef": "Variance Collapse Ratio",
+              "displayName": "Variance Collapse Ratio"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Measure": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Fact_BasisPanel"
+                  }
+                },
+                "Property": "VarianceCollapseRatio"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
