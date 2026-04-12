@@ -102,10 +102,9 @@ prior period, Δ% annualized).
 
 ## Reproducing This Dashboard
 
-### Step 1 — Get a free EIA API key
+### Step 1 — Get an EIA API key
 
-Register at https://www.eia.gov/opendata/register.php — takes
-60 seconds, key arrives by email immediately, no cost ever.
+Register at https://www.eia.gov/opendata/register.php
 
 ### Step 2 — Install dependencies
 
