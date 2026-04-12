@@ -46,7 +46,7 @@ Embed this variable block at the top of any measure requiring
 temporal cutoff logic:
 
 ```dax
--- ── Scenario resolution ──────────────────────────────────────────────
+-- Scenario resolution
 VAR _ActiveScenarioKey =
     SELECTEDVALUE( Dim_Scenario[ScenarioKey] )
 
@@ -75,7 +75,7 @@ VAR _CutoffPeriod =
 ```dax
 [Amount_WithCutoff] =
 
--- ── Scenario resolution (paste variable block here) ──────────────────
+-- Scenario resolution (paste variable block here)
 VAR _ActiveScenarioKey  = SELECTEDVALUE( Dim_Scenario[ScenarioKey] )
 VAR _ActivePeriodIndex  = SELECTEDVALUE( Dim_Scenario[PeriodIndex], 0 )
 VAR _ReportingLag       = 2
@@ -83,14 +83,14 @@ VAR _CutoffPeriod       = IF( _ActiveScenarioKey = "CURRENT",
                               MONTH( TODAY() ) - _ReportingLag,
                               _ActivePeriodIndex )
 
--- ── Series resolution ────────────────────────────────────────────────
+-- Series resolution
 VAR _SeriesLabel =
     SELECTEDVALUE( Dim_LegendSeries[SeriesLabel] )
 
 VAR _VisualPeriod =
     SELECTEDVALUE( Dim_Date[MonthNumber] )
 
--- ── Dispatch ─────────────────────────────────────────────────────────
+-- Dispatch
 RETURN
 SWITCH(
     _SeriesLabel,
