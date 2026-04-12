@@ -34,7 +34,6 @@ Dim_LegendSeries                    Dim_Scenario
   SRS_003     Actual      3           FCST_P06     6            FORECAST
                                       FCST_P09     9            FORECAST
          │                                    │
-         │                                    │
          └──────── drives ──────────────────────────── [ScenarioDispatch] ──────► visual
 ```
 
@@ -60,16 +59,9 @@ DATATABLE(
 )
 ```
 
-Add additional series rows (e.g., `"Budget"`, `"Prior Year"`) as
-reporting requirements expand. Each new row requires a corresponding
-branch in the dispatch measure.
-
 ---
 
 ## Component 2 — The Resolution Variable Block
-
-Embed this block in every scenario-aware measure. It derives the
-active scenario state from slicer context before any dispatch logic:
 
 ```dax
 -- ── Scenario resolution ──────────────────────────────────────────────
@@ -79,7 +71,7 @@ VAR _ActiveScenarioKey =
 VAR _ActivePeriodIndex =
     COALESCE(
         SELECTEDVALUE( Dim_Scenario[PeriodIndex] ),
-        MONTH( TODAY() ) - 2    -- fallback: derive from system date
+        MONTH( TODAY() ) - 2
     )
 
 VAR _CutoffPeriod =
@@ -89,22 +81,17 @@ VAR _CutoffPeriod =
         _ActivePeriodIndex
     )
 
--- ── Series resolution ────────────────────────────────────────────────
-VAR _SeriesLabel =
-    SELECTEDVALUE( Dim_LegendSeries[SeriesLabel] )
-
-VAR _VisualPeriod =
-    SELECTEDVALUE( Dim_Date[MonthNumber] )
+VAR _SeriesLabel  = SELECTEDVALUE( Dim_LegendSeries[SeriesLabel] )
+VAR _VisualPeriod = SELECTEDVALUE( Dim_Date[MonthNumber] )
 ```
 
 ---
 
-## Component 3 — The SWITCH Dispatch Measure
+## Component 3 — Standard SWITCH Dispatch
 
 ```dax
 [ScenarioDispatch_Amount] =
 
--- [paste resolution variable block here]
 VAR _ActiveScenarioKey  = SELECTEDVALUE( Dim_Scenario[ScenarioKey], "CURRENT" )
 VAR _ActivePeriodIndex  = COALESCE( SELECTEDVALUE( Dim_Scenario[PeriodIndex] ),
                                      MONTH(TODAY()) - 2 )
@@ -117,9 +104,6 @@ RETURN
 SWITCH(
     _SeriesLabel,
 
-    -- ── Plan ─────────────────────────────────────────────────────────
-    -- Full-year plan. Slicer filter removed; explicit PLAN predicate applied.
-    -- Renders across all periods as a reference baseline.
     "Plan",
     CALCULATE(
         [Amount],
@@ -127,10 +111,6 @@ SWITCH(
         Dim_Scenario[ScenarioType] = "PLAN"
     ),
 
-    -- ── Forecast ─────────────────────────────────────────────────────
-    -- Front-month forecast scenario relative to the active cutoff.
-    -- References the scenario whose PeriodIndex = CutoffPeriod - 1,
-    -- which is the scenario that starts forecasting at the next period.
     "Forecast",
     CALCULATE(
         [Amount],
@@ -138,10 +118,6 @@ SWITCH(
         Dim_Scenario[PeriodIndex] = _CutoffPeriod - 1
     ),
 
-    -- ── Actual ───────────────────────────────────────────────────────
-    -- Confirmed values for finalized periods only.
-    -- Returns BLANK() for periods beyond the cutoff — suppresses
-    -- the bar segment and data label without rendering zero.
     "Actual",
     IF(
         _VisualPeriod <= _CutoffPeriod,
@@ -152,81 +128,137 @@ SWITCH(
         )
     ),
 
-    -- Default: BLANK() for any unmapped series label
     BLANK()
 )
 ```
 
 ---
 
-## Filter Context Flow Diagram
+## Advanced Variant — Retrospective Forecast Accuracy Layer
 
-```
-User sets slicer: ScenarioKey = "FCST_P09"
-                         │
-                         ▼
-          Filter propagates to Fact_PeriodData[ScenarioKey]
-                         │
-           ┌─────────────┼─────────────┐
-           ▼             ▼             ▼
-        Plan          Forecast       Actual
-        branch         branch        branch
-           │             │             │
-    REMOVEFILTERS   REMOVEFILTERS  REMOVEFILTERS
-    on [ScenarioKey] on [ScenarioKey] on [ScenarioKey]
-           │             │             │
-    Re-apply:       Re-apply:      Re-apply:
-    ScenarioType    PeriodIndex    PeriodIndex
-    = "PLAN"        = 8 (9-1)      = VisualPeriod
-                                   IF VisualPeriod <= 9
-```
+The standard Forecast branch shows a single forward-looking series.
+This variant **splits the Forecast branch by whether the period has
+been finalized**, enabling visual comparison of what was predicted
+versus what was subsequently realized — on the same series line,
+without a second measure.
 
-The slicer filter is intercepted and replaced by an explicit predicate
-in each branch. No branch inherits the raw slicer value.
+### The Problem This Solves
 
----
+With the standard variant, the Forecast series for all finalized
+periods shows the *currently selected* scenario projected backward —
+not what was actually forecast at the time. This makes it impossible
+to answer: *"What did our forecast predict for period 3, and how
+accurate was it compared to actuals?"*
 
-## Extending to Multiple KPIs
+The advanced variant shows the **front-month prediction** for each
+finalized period: `Scenario[PeriodIndex] = VisualPeriod - 1` is the
+scenario that was current when that period was still in the future.
+Future periods continue to show the selected scenario's projection.
+The Forecast line becomes a continuous record of predictive accuracy
+on the left and forward projection on the right.
 
-Once the resolution block and SWITCH structure are established, adding
-a KPI is a single substitution of the base measure:
+### Implementation
 
 ```dax
-[ScenarioDispatch_Volume] =
--- [same resolution block]
-SWITCH( _SeriesLabel,
-    "Plan",     CALCULATE( [Volume],    REMOVEFILTERS(...), Dim_Scenario[ScenarioType] = "PLAN" ),
-    "Forecast", CALCULATE( [Volume],    REMOVEFILTERS(...), Dim_Scenario[PeriodIndex] = _CutoffPeriod - 1 ),
-    "Actual",   IF( _VisualPeriod <= _CutoffPeriod,
-                    CALCULATE( [Volume], REMOVEFILTERS(...), Dim_Scenario[PeriodIndex] = _VisualPeriod ) )
-)
+[ScenarioDispatch_WithRetro] =
 
-[ScenarioDispatch_UnitCost] =
--- [same resolution block]
-SWITCH( _SeriesLabel,
-    "Plan",     CALCULATE( [UnitCost],  REMOVEFILTERS(...), Dim_Scenario[ScenarioType] = "PLAN" ),
-    "Forecast", CALCULATE( [UnitCost],  REMOVEFILTERS(...), Dim_Scenario[PeriodIndex] = _CutoffPeriod - 1 ),
-    "Actual",   IF( _VisualPeriod <= _CutoffPeriod,
-                    CALCULATE( [UnitCost], REMOVEFILTERS(...), Dim_Scenario[PeriodIndex] = _VisualPeriod ) )
+VAR _ActiveScenarioKey  = SELECTEDVALUE( Dim_Scenario[ScenarioKey], "CURRENT" )
+VAR _ActivePeriodIndex  = COALESCE( SELECTEDVALUE( Dim_Scenario[PeriodIndex] ),
+                                     MONTH(TODAY()) - 2 )
+VAR _CutoffPeriod       = IF( _ActiveScenarioKey = "CURRENT",
+                               MONTH(TODAY()) - 2, _ActivePeriodIndex )
+VAR _SeriesLabel        = SELECTEDVALUE( Dim_LegendSeries[SeriesLabel] )
+VAR _VisualPeriod       = SELECTEDVALUE( Dim_Date[MonthNumber] )
+
+RETURN
+SWITCH(
+    _SeriesLabel,
+
+    "Plan",
+    CALCULATE(
+        [Amount],
+        REMOVEFILTERS( Fact_PeriodData[ScenarioKey] ),
+        Dim_Scenario[ScenarioType] = "PLAN"
+    ),
+
+    -- ── Forecast: split finalized vs future ──────────────────────────
+    "Forecast",
+    COALESCE(
+        IF(
+            _VisualPeriod <= _CutoffPeriod,
+
+            -- Finalized periods: show front-month scenario prediction.
+            -- PeriodIndex = _VisualPeriod - 1 is the scenario that was
+            -- "current" when this period was still in the future.
+            CALCULATE(
+                [Amount],
+                REMOVEFILTERS( Fact_PeriodData[ScenarioKey] ),
+                Dim_Scenario[PeriodIndex] = _VisualPeriod - 1,
+                Dim_Date[MonthNumber]     = _VisualPeriod
+            ),
+
+            -- Future periods: show currently selected scenario.
+            -- Both PeriodLabel AND ScenarioKey must be removed to prevent
+            -- cross-filter contamination from the date axis context.
+            CALCULATE(
+                [Amount],
+                REMOVEFILTERS( Fact_PeriodData[PeriodLabel] ),
+                REMOVEFILTERS( Fact_PeriodData[ScenarioKey] ),
+                Fact_PeriodData[ScenarioKey] = _ActiveScenarioKey
+            )
+        ),
+        0
+        -- Forecast uses COALESCE( ..., 0 ), not BLANK().
+        -- The forecast line must remain continuous even at zero.
+        -- Actual uses BLANK() to suppress future periods entirely.
+    ),
+
+    -- ── Actual: confirmed values, future suppressed ───────────────────
+    "Actual",
+    IF(
+        _VisualPeriod <= _CutoffPeriod,
+        CALCULATE(
+            [Amount],
+            REMOVEFILTERS( Fact_PeriodData[ScenarioKey] ),
+            Dim_Scenario[PeriodIndex] = _VisualPeriod
+        )
+    ),
+
+    BLANK()
 )
 ```
 
-All measures are structurally identical. Only the base measure changes.
-Extract the resolution block into a shared calculation group if your
-model supports it.
+### Why the Dual REMOVEFILTERS in the Future Branch
 
----
+```dax
+REMOVEFILTERS( Fact_PeriodData[PeriodLabel] ),
+REMOVEFILTERS( Fact_PeriodData[ScenarioKey] ),
+```
 
-## Visual Field Configuration
+Removing only `[ScenarioKey]` leaves a residual period filter
+propagated from the date axis. This restricts the scenario lookup
+to a single period context, returning incorrect values or BLANK.
+Removing `[PeriodLabel]` first clears the cross-filter; the explicit
+`ScenarioKey` predicate then operates across the full period range
+before the visual re-applies the period constraint at render time.
 
-| Field well        | Source                              |
-|-------------------|-------------------------------------|
-| X-axis            | `Dim_AxisConfig[PeriodLabel]`       |
-| Y-axis (series 1) | `[ScenarioDispatch_Amount]`         |
-| Y-axis (series 2) | `[ScenarioDispatch_Volume]`         |
-| Legend            | `Dim_LegendSeries[SeriesLabel]`     |
-| Sort legend by    | `Dim_LegendSeries[SortOrder]`       |
-| Slicer            | `Dim_Scenario[ScenarioAlias]`       |
+This two-column removal is the minimal correct solution to a
+non-obvious filter context interaction that surfaces specifically
+when the axis configuration creates cross-column period pressure
+against the scenario dimension.
+
+### Visual Interpretation
+
+```
+Period:    P01  P02  P03  P04  P05  P06  P07  P08  P09  P10  P11  P12
+           ──── ──── ──── ──── ──── ──── ──── ──── ──── ──── ──── ────
+Actual:     ✓    ✓    ✓    ✓    ✓    ✓    ✓    ✓    ✓    ─    ─    ─
+Forecast: retro retro retro retro retro retro retro retro retro fwd  fwd  fwd
+Plan:       ✓    ✓    ✓    ✓    ✓    ✓    ✓    ✓    ✓    ✓    ✓    ✓
+
+retro = front-month prediction for that period (historical accuracy)
+fwd   = selected scenario forward projection
+```
 
 ---
 
@@ -234,20 +266,20 @@ model supports it.
 
 | Symptom | Probable Cause | Resolution |
 |---------|---------------|------------|
-| All series identical despite REMOVEFILTERS | Relationship cross-filter direction overrides column removal | Set `Dim_Scenario` → `Fact_PeriodData` as single-direction only |
-| Plan series always blank | `ScenarioType` value mismatch | Inspect `DISTINCT( Dim_Scenario[ScenarioType] )` in DAX query |
-| Forecast and Actual overlap at boundary | `PeriodIndex - 1` off-by-one | Confirm inclusive/exclusive boundary convention in scenario design |
-| Legend renders in wrong order | Sort by column not configured | Set `SeriesLabel` sort column to `SortOrder` in Data View |
-| Slicer set to ALL returns BLANK on all branches | `SELECTEDVALUE` returns BLANK when multiple values active | Wrap with `COALESCE( SELECTEDVALUE(...), "CURRENT" )` |
+| All series identical | Missing `REMOVEFILTERS` | Add column-scoped removal to each branch |
+| Forecast flat across finalized periods | Single-column `REMOVEFILTERS` in future branch | Add `REMOVEFILTERS( Fact_PeriodData[PeriodLabel] )` |
+| Retro branch shows wrong values | Off-by-one on `PeriodIndex - 1` | Confirm inclusive boundary convention in scenario design |
+| Forecast line breaks at cutoff | Missing `COALESCE` | Wrap future branch: `COALESCE( IF(...), 0 )` |
+| Plan always blank | `ScenarioType` string mismatch | Inspect `DISTINCT( Dim_Scenario[ScenarioType] )` |
+| Legend wrong order | Sort column not set | Set `SeriesLabel` sort column to `SortOrder` |
 
 ---
 
 ## Reuse Checklist
 
-- [ ] Replace `Fact_PeriodData[ScenarioKey]` with your fact table's scenario foreign key
+- [ ] Replace `Fact_PeriodData[ScenarioKey]` and `[PeriodLabel]` with your fact table columns
 - [ ] Replace `Dim_Scenario[PeriodIndex]` and `[ScenarioType]` with your scenario attributes
 - [ ] Replace `Dim_LegendSeries[SeriesLabel]` with your legend dimension
-- [ ] Replace `Dim_Date[MonthNumber]` with your period number column
+- [ ] Replace `Dim_Date[MonthNumber]` with your period column
 - [ ] Replace `[Amount]` with your base measure
-- [ ] Verify `"PLAN"` string matches the exact value in `Dim_Scenario[ScenarioType]`
-- [ ] Add additional `SWITCH` branches for Budget, Prior Year, or other series as required
+- [ ] Choose: standard variant (simpler) or advanced variant (retrospective accuracy layer)
