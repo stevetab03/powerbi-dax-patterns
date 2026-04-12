@@ -16,8 +16,8 @@ This repository documents a set of advanced DAX patterns for
 **enterprise FP&A reporting** in Power BI. Each pattern addresses a
 class of problems that standard documentation does not cover at
 production depth: cross-scenario filter context manipulation, dynamic
-temporal cutoff logic, and hybrid axis construction for rolling
-forecast matrices.
+temporal cutoff logic, hybrid axis construction, and row-level
+financial statement formatting.
 
 The patterns are grounded in Kimball dimensional modeling principles
 and are designed for environments where Power BI connects directly to
@@ -50,7 +50,10 @@ Fact_PeriodData
     │                         Year, QuarterNumber, MonthNumber,
     │                         MonthNameShort, MonthNameLong, FiscalPeriod
     │
-    ├── Dim_AxisConfig        MonthLabel, SortOrder
+    ├── Dim_LineFormat        AccountKey, LineLabel, DisplayType,
+    │   (Pattern 04)          ScaleFactor, SortOrder, SectionHeader, NegateSign
+    │
+    ├── Dim_AxisConfig        PeriodLabel, MonthNumber (SortOrder)
     │   (Pattern 03)          Hybrid month + FY axis configuration
     │
     └── Dim_LegendSeries      SeriesKey, SeriesLabel, SortOrder
@@ -64,8 +67,9 @@ Fact_PeriodData
 | # | Document | Core Problem | Primary Technique |
 |---|----------|-------------|-------------------|
 | [01](patterns/01_temporal_cutoff.md) | Temporal Series Cutoff | Display Actuals only through the last finalized period; suppress future months | `REMOVEFILTERS` · lag constant · conditional `BLANK()` |
-| [02](patterns/02_cross_scenario_switch.md) | Cross-Scenario Aggregation | Show Plan, Forecast, and Actual as independent series despite an active scenario slicer | `SWITCH` · `REMOVEFILTERS` · `Dim_LegendSeries` |
-| [03](patterns/03_hybrid_axis_union.md) | Hybrid Axis Construction | Combine dynamic calendar months with a static fiscal year total on the same chart axis | `UNION` · `SUMMARIZE` · sort-by-column |
+| [02](patterns/02_cross_scenario_switch.md) | Cross-Scenario Aggregation | Show Plan, Forecast, and Actual as independent series despite an active scenario slicer. Advanced variant adds retrospective forecast accuracy layer. | `SWITCH` · `REMOVEFILTERS` · `Dim_LegendSeries` · dual-column removal |
+| [03](patterns/03_hybrid_axis_union.md) | Hybrid Axis Construction | Combine dynamic calendar periods with a static fiscal year total on the same chart axis | `UNION` · `SUMMARIZE` · sort-by-column |
+| [04](patterns/04_financial_statement_matrix.md) | Financial Statement Matrix | Row-level formatting in a matrix visual where every row has different scale, precision, sign convention, and unit | `Dim_LineFormat` mapping table · `FORMAT()` · two-layer measure architecture |
 
 ---
 
@@ -78,16 +82,23 @@ This makes behavior predictable, testable, and independent of report
 layout changes.
 
 **Kimball schema alignment.**  
-Helper tables (`Dim_AxisConfig`, `Dim_LegendSeries`) are first-class
-model citizens with defined relationships — not disconnected lookup
-objects. Relationship cardinality and filter propagation direction
-are documented explicitly.
+Helper tables (`Dim_AxisConfig`, `Dim_LegendSeries`, `Dim_LineFormat`)
+are first-class model citizens with defined relationships — not
+disconnected lookup objects. Relationship cardinality and filter
+propagation direction are documented explicitly.
+
+**Separation of computation and display.**  
+Pattern 04 formalizes a two-layer measure architecture: `[_BaseAggregation]`
+computes raw values with no formatting; `[StatementDisplay]` formats
+with no computation. Each layer is independently maintainable and
+testable.
 
 **Composability.**  
 Pattern 01 (temporal cutoff) is consumed by Pattern 02 (scenario
 SWITCH) as an embedded variable block. Pattern 03 (hybrid axis)
-drives the visual that renders Pattern 02's measures. The three
-patterns are designed to be used together.
+drives the visual that renders Pattern 02's measures. Pattern 04
+(financial statement) uses Pattern 03's `Dim_MatrixColumns` as its
+column definition. The four patterns are designed to be used together.
 
 ---
 
