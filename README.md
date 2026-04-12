@@ -102,6 +102,48 @@ column definition. The four patterns are designed to be used together.
 
 ---
 
+## Repository Structure
+```
+powerbi-dax-patterns/
+│
+├── README.md
+├── LICENSE
+├── .gitignore
+│
+├── patterns/
+│   ├── 01_temporal_cutoff.md
+│   ├── 02_cross_scenario_switch.md
+│   ├── 03_hybrid_axis_union.md
+│   └── 04_financial_statement_matrix.md
+│
+└── demo/
+    │
+    ├── README.md
+    │
+    ├── data/
+    │   ├── pipeline.py
+    │   ├── requirements.txt
+    │   └── sample/
+    │       ├── basis_panel_sample.csv
+    │       └── disruption_events.csv
+    │
+    ├── WTI_Basis_Dashboard.pbip
+    ├── WTI_Basis_Dashboard.SemanticModel/
+    ├── WTI_Basis_Dashboard.Report/
+    │
+    ├── powerbi/
+    │   ├── data_model.md
+    │   └── measures.md
+    │
+    └── screenshots/
+        ├── 01_basis_time_series.png
+        ├── 02_term_structure.png
+        ├── 03_tau_variance.png
+        └── 04_summary_matrix.png
+```
+
+---
+
 ## Related Work
 
 - **[ORBIT](https://github.com/stevetab03/ORBIT)** — the oil futures-spot
