@@ -1,0 +1,8 @@
+event_date,event_label,event_type,description,year,sort_order
+2020-04-20,WTI Negative Price,MARKET_STRUCTURE,Front-month WTI settles at -$37.63 due to storage constraints,2020,0
+2022-02-24,Ukraine Invasion,GEOPOLITICAL,Russia invades Ukraine; WTI basis widens sharply,2022,1
+2022-03-08,WTI $130 Peak,GEOPOLITICAL,WTI reaches 14-year high of $130.50,2022,2
+2023-10-07,Hamas Attack,GEOPOLITICAL,Israel-Hamas conflict begins; Middle East risk premium enters,2023,3
+2026-02-28,US-Iran War Begins,GEOPOLITICAL,US and Israel strike Iran; Strait of Hormuz effectively closes,2026,4
+2026-03-11,IEA Emergency Release,POLICY,Largest-ever IEA emergency stock release; 11mb/d Gulf production offline,2026,5
+2026-04-07,US-Iran Ceasefire,GEOPOLITICAL,Two-week ceasefire. WTI -16% in one session. Brent spot $124 vs futures $94,2026,6
