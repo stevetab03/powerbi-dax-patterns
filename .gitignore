@@ -1,0 +1,12 @@
+# Power BI local cache — never commit
+**/.pbi/cache.abf
+**/.pbi/localSettings.json
+
+# Raw data files — regenerate via pipeline.py
+demo/data/raw/
+demo/data/outputs/
+
+# Environment
+__pycache__/
+*.pyc
+.env
