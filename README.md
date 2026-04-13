@@ -135,11 +135,13 @@ powerbi-dax-patterns/
     │   ├── data_model.md
     │   └── measures.md
     │
-    └── screenshots/
-        ├── 01_basis_time_series.png
-        ├── 02_term_structure.png
-        ├── 03_tau_variance.png
-        └── 04_summary_matrix.png
+    └── analysis/
+        ├── ANALYSIS.md
+        └── images/
+            ├── 01_basis_time_series.png
+            ├── 02_term_structure.png
+            ├── 03_variance_collapse.png
+            └── 04_event_table.png
 ```
 
 ---
