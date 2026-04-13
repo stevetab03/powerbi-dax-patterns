@@ -195,24 +195,26 @@ blob.
 
 ```
 demo/
-├── README.md                    ← this file
-│
+├── README.md
 ├── data/
-│   ├── pipeline.py              ← data ingestion, basis computation, event snapping
+│   ├── pipeline.py
 │   ├── requirements.txt
-│   └── outputs/
-│       └── powerbi/
-│           ├── basis_panel_clean.csv
-│           ├── variance_by_tau.csv
-│           └── disruption_events_clean.csv
-│
+│   └── sample/
+│       ├── basis_panel_sample.csv
+│       └── disruption_events.csv
 ├── powerbi/
-│   ├── data_model.md            ← schema, relationships, calculated tables
-│   └── measures.md              ← all DAX measures with architecture notes
-│
+│   ├── data_model.md
+│   └── measures.md
+├── analysis/
+│   ├── ANALYSIS.md
+│   └── images/
+│       ├── 01_basis_time_series.png
+│       ├── 02_term_structure.png
+│       ├── 03_variance_collapse.png
+│       └── 04_event_table.png
 ├── WTI_Basis_Dashboard.pbip
-├── WTI_Basis_Dashboard.SemanticModel/
-└── WTI_Basis_Dashboard.Report/
+├── WTI_Basis_Dashboard.Report/
+└── WTI_Basis_Dashboard.SemanticModel/
 ```
 
 ---
