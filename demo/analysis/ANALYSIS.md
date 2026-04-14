@@ -75,45 +75,19 @@ which is why the markers render correctly without a relationship join.
 
 ![Term Structure](images/02_term_structure.png)
 
-A line chart with two series — WTI spot price and front-month futures
-price — plotted against a user-controlled date range. The same
-`[EventMarker]` series annotates events within the selected window.
-An average basis KPI card summarizes the mean spread for the period
-in view.
+A line chart with two series — WTI spot price and front-month futures price — plotted over the full sample (January 2020 – April 2026). The [EventMarker] series annotates five disruption events as red markers directly on the chart. An average basis KPI card shows the mean spread across the entire period.
 
 **What the results show:**
 
-The most important observation on this page is how *closely* the two
-series track. For most of the sample they are nearly indistinguishable
-at chart scale — the market maintained tight convergence discipline
-with basis oscillating within a few cents most trading days. This
-visual demonstrates that the theoretical convergence mechanism is
-intact for routine periods.
+The dominant visual story is how closely the two series track across six years — for most of the sample they are nearly indistinguishable at chart scale. The market maintained tight convergence discipline with basis oscillating within cents most trading days. This confirms that the theoretical convergence mechanism is intact for routine periods.
 
-The 2026 window tells the opposite story. Zoomed into January–April
-2026, the two lines diverge visibly and persistently. Spot prices
-consistently ran $0.50–$1.80 above front-month futures, a classic
-backwardation structure where physical scarcity drives spot above the
-forward curve. The average basis for this window reads approximately
-−$0.54, meaning spot was on average $0.54 above front-month — a
-sustained inversion of the normal contango relationship.
+Four regime breaks stand out visually. The WTI Negative Price event (April 2020) is the most dramatic — spot collapsed below zero while front-month remained positive, producing the largest visible divergence in the entire sample. The WTI $130 Peak (March 2022) shows spot briefly surging above front-month during the Ukraine-driven supply shock, then rapidly mean-reverting as the physical tightness resolved. The Hamas Attack (October 2023) produced a moderate but visible spike with quick normalization. The US-Iran Ceasefire (April 2026) marks the right edge of the chart — spot at $114 running above front-month at $112.40, a ($1.60) basis at the tail of a sustained 2026 backwardation regime.
 
-The US-Iran Ceasefire event on April 6 is visible as a red marker
-near the top right of the chart. At that point spot was at $114 and
-front-month at $112.40, a $1.60 basis — the widest reading in the
-entire 2026 escalation sequence, counterintuitively occurring on the
-de-escalation event. This is because the ceasefire announcement
-triggered an immediate futures rally (the market pricing in resumed
-supply) faster than spot adjusted, momentarily widening the spread
-before convergence resumed.
+The average basis of ($0.32) across the full sample confirms a persistent but modest backwardation structure — spot traded on average $0.32 above front-month over six years, consistent with a market that periodically experiences physical scarcity episodes but maintains convergence discipline between them.
 
 **Design note:**
 
-The date slicer on this page is scoped locally and does not propagate
-to other pages. This is intentional — Page 2 is an exploratory zoom
-tool while Pages 3 and 4 summarize the full sample. Managing
-filter scope at the page level rather than the report level is a
-deliberate architectural choice documented in the data model.
+The date slicer on this page can be scoped locally to zoom into specific windows — the 2026 escalation sequence in particular reveals the intraday divergence structure between spot and futures that is compressed at full-sample scale. Managing filter scope at the page level rather than the report level is a deliberate architectural choice, keeping Pages 3 and 4 anchored to the full sample while Page 2 serves as an exploratory zoom tool.
 
 ---
 
