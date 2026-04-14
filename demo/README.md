@@ -154,9 +154,9 @@ definitions, folder structure, and visual configuration notes.
 This ensures the file is committed as diffable source, not a binary
 blob.
 
----
-
 ## Repository Structure
+
+---
 demo/
 ├── README.md
 ├── data/
@@ -178,7 +178,6 @@ demo/
 ├── WTI_Basis_Dashboard.pbip
 ├── WTI_Basis_Dashboard.Report/
 └── WTI_Basis_Dashboard.SemanticModel/
-
 ---
 
 ## Data Sources
