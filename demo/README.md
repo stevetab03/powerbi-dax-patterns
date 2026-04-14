@@ -156,7 +156,7 @@ blob.
 
 ## Repository Structure
 
----
+```
 demo/
 ├── README.md
 ├── data/
@@ -178,7 +178,7 @@ demo/
 ├── WTI_Basis_Dashboard.pbip
 ├── WTI_Basis_Dashboard.Report/
 └── WTI_Basis_Dashboard.SemanticModel/
----
+```
 
 ## Data Sources
 
