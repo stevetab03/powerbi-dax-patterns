@@ -1,18 +1,4 @@
-This is significantly out of date. Issues:
-
-Intro says "two major geopolitical supply disruptions" — there are seven events
-"Strait of Hormuz closure" framing — never used
-Page 1 describes [DisruptionLabel] via USERELATIONSHIP — actual implementation uses [EventMarker] merged into fact table
-Page 2 describes tenor slicer, Field Parameter, Dim_Tenor — none of that was built
-Page 3 tau bins say "61-90 days" — actual bins start at 31-45d
-Page 4 describes a summary matrix — actual is the disruption event table
-Pipeline outputs list term_structure.csv — not used
-Repo structure shows screenshots/ — replaced by analysis/
-ORBIT section omits the actual ratio of 2.46
-
-Here's the full replacement:
-
-markdown# Demo — WTI Futures-Spot Basis Dashboard
+# Demo — WTI Futures-Spot Basis Dashboard
 
 A fully reproducible Power BI dashboard demonstrating advanced DAX
 engineering patterns documented in this repository, built on publicly
