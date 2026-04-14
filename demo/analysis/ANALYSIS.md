@@ -75,7 +75,7 @@ which is why the markers render correctly without a relationship join.
 
 ![Term Structure](images/02_term_structure.png)
 
-A line chart with two series — WTI spot price and front-month futures price — plotted over the full sample (January 2020 – April 2026). The [EventMarker] series annotates five disruption events as red markers directly on the chart. An average basis KPI card shows the mean spread across the entire period.
+A line chart with two series — WTI spot price and front-month futures price — plotted over the full sample (January 2020 – April 2026). The [EventMarker] series annotates seven disruption events as red markers directly on the chart. An average basis KPI card shows the mean spread across the entire period.
 
 **What the results show:**
 
