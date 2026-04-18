@@ -150,7 +150,10 @@ powerbi-dax-patterns/
 
 - **[ORBIT](https://github.com/stevetab03/ORBIT)** — the oil futures-spot
   basis convergence model whose Python calibration outputs are exported
-  to CSV and visualized in Power BI using these patterns.
+  to CSV and visualized in Power BI using these patterns.  
+
+- **[ARCM](https://github.com/stevetab03/ARCM)** — the regime-aware short rate framework that characterizes the Nelson-Siegel factor dynamics specific to that regime,
+and produces forecasts conditioned on the current regime state.
 
 - **[SVMA](https://github.com/stevetab03/SVMA)** — the predecessor stochastic
   volatility framework, also using Power BI as the visualization layer.
